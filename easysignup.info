@@ -1,0 +1,13 @@
+name = easysignup
+description = Easy signup per content type
+
+core = 7.x
+package = bmh
+php = 5.3
+version = 7.x-1.0
+
+dependencies[] = block
+files[] = easysignup.module
+files[] = easysignup.install
+
+configure = admin/structure/easysignup

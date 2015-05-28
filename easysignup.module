@@ -1,0 +1,422 @@
+<?php
+
+/**
+ * @todo update node type name after renaming a node type
+ * @todo table easysignup_comments: remove the "sent" field
+ * @todo GUI for editing user's preferences in the subcriber list
+ * @todo add tabs to the config pages to link them
+ * @todo subscribers_list: add the option option aside the node type
+ * @todo subscribers_list: add the option pendig for not activated users
+ * @todo wrap the checkbox in the node edit form in a fieldset
+ */
+module_load_include('inc', 'easysignup', 'callbacks');
+
+//function easysignup_init() {
+//$tree = _mailing_list();
+//_send_mass($tree);
+//}
+
+/**
+ * implements hook_cron().
+ */
+function easysignup_cron() {
+  $tree = _mailing_list();
+  _send_mass($tree);
+}
+
+/**
+ * implements hook_permission().
+ */
+function easysignup_permission() {
+  return array(
+    'administer easysignup' => array(
+      'title' => t('Administer Easy signup'),
+      'description' => t('Administer Easy signup.'),
+    ),
+  );
+}
+
+/**
+ * implements hook_help().
+ */
+function easysignup_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case 'admin/modules#description':
+      $output .= t('The Easy signup module generates a block so that users can signup and be notified for new content');
+      break;
+  }
+  return $output;
+}
+
+/**
+ * implements hook_menu().
+ */
+function easysignup_menu() {
+  $items['admin/structure/easysignup'] = array(
+    'title' => 'Easy signup',
+    'description' => 'Configure Easy signup',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('easysignup_admin_settings'),
+    'access arguments' => array('administer easysignup'),
+    'file' => 'easysignup.admin.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+  $items['signup_abo'] = array(
+    'title' => 'Your registration has been successful.',
+    'description' => 'your subscription is confirmed',
+    'page callback' => '_confirmation',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['manage'] = array(
+    'title' => 'Easy signup manage subscription',
+    'description' => 'Managing subscription',
+    'page callback' => '_manage',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['unsubsribe'] = array(
+    'title' => 'Easy signup unsubscribe',
+    'description' => 'Unsubsribe',
+    'page callback' => '_unsubsribe',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['admin/structure/easysignup/subscribers_list'] = array(
+    'title' => 'Subscribers list',
+    'description' => 'List of current subcribers',
+    'page callback' => '_subscribers_list',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer easysignup'),
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+
+/**
+ * implements hook_block_info()
+ */
+function easysignup_block_info() {
+  $blocks['easysignup'] = array(
+    'info' => 'easysignup'
+  );
+  return $blocks;
+}
+
+/**
+ * implements hook_block_view()
+ */
+function easysignup_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'easysignup':
+      $active_nodes = variable_get('easysignup_active', array());
+      $block['subject'] = '';
+      if (!empty($active_nodes)) {
+        $block['content'] = drupal_get_form('easysignup_form');
+      }
+      else {
+        $block['content'] = t('No content type available');
+      }
+      break;
+  }//dpm(get_defined_vars());
+  return $block;
+}
+
+/**
+ * generates the block form
+ * @param type $form
+ * @param type $form_state
+ * @return string
+ */
+function easysignup_form($form, &$form_state) {
+  global $user;
+  $active = variable_get('easysignup_active', array());
+  $form['presentation'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Be top-informed! Receive the latest articles automatically  by email.'),
+  );
+  $form['email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Your email'),
+    '#required' => TRUE
+  );
+  $form['choose'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Your interests'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['choose']['description'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Select your individual interests from the following areas.'),
+  );
+  foreach ($active as $type => $options) {
+    //if content type is not private or user is logged in
+    if ($options['private'] == 0 || ($options['private'] == 1 && $user->uid !== 0)) {
+      $node_name = _get_node_name($type);
+      $form['choose'][$type] = array(
+        '#type' => 'checkbox',
+        '#title' => $node_name,
+      );
+      //if content type is open for comments
+      if ($options['comment'] === 1) {
+        $form['choose']['container_|_' . $type] = array(
+          '#type' => 'container',
+          '#title' => t('Options'),
+          '#prefix' => '<div class="sub-container">',
+          '#suffix' => '</div>',
+          '#states' => array(
+            'invisible' => array(
+              'input[name=' . $type . ']' => array('checked' => FALSE),
+            ),
+          ),
+        );
+        $form['choose']['container_|_' . $type][$type . '_|_comment'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Comments'),
+        );
+      }
+    }
+  }
+  $form['spm'] = array(//anti spam
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+  );
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'easysignup') . '/easysignup.css',
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#prefix' => '<div class="form-actions">',
+    '#suffix' => '</div>',
+    '#value' => t('Go'),
+  );
+  //dpm(get_defined_vars());
+  return $form;
+}
+
+/**
+ * validate the block form
+ * @param type $form
+ * @param type $form_state
+ */
+function easysignup_form_validate($form, &$form_state) {
+  //if security field is empty
+  if ($form_state['values']['spm'] === '') {
+    $mail = $form_state['values']['email'];
+    if ($mail !== '' && !valid_email_address($mail)) {
+      form_set_error('["email"]', t('Please enter a valid email address!'));
+    }
+    //get active content types to validate the form
+    $active = variable_get('easysignup_active', array());
+    $choise = FALSE;
+    foreach ($active as $type => $options) {
+      if ($form_state['values'][$type] == 1) {
+        $choise = TRUE;
+      }
+    }
+    if ($choise == FALSE) {
+      form_set_error('["article"]', t('Please make a choise!'));
+    }
+  }
+  else {
+    form_set_error('["spm"]', t('No submission.'));
+  }
+}
+
+/**
+ * callback function for submitting the signup form
+ * @global type $base_url
+ * @param type $form
+ * @param type $form_state
+ */
+function easysignup_form_submit($form, &$form_state) {
+  global $base_url;
+  $mail = $form_state['values']['email'];
+  $hash = _generate_hash();
+  $link = $base_url . '/signup_abo?c=' . $hash;
+  $abo = array();
+  $verif = _subscription_verif($mail);
+  if ($verif == FALSE) {
+    $content_types = variable_get('easysignup_active');
+    foreach ($content_types as $type => $opt) {
+      if (array_key_exists($type, $form_state['values'])) {
+        if ($form_state['values'][$type] == 1) {
+          if (isset($form_state['values'][$type . '_|_comment']) &&
+              $form_state['values'][$type . '_|_comment'] == 1) {
+            $abo[$type]['comment'] = 1;
+          }
+          else {
+            $abo[$type]['comment'] = 0;
+          }
+        }
+      }
+    }
+    $bundles = serialize($abo);
+    _record_user($mail, $hash, $bundles);
+    _send_confirmation_mail($mail, $link);
+    drupal_set_message(t('You will receive an email with a confirmation link. By clicking on the link, the registration process will be completed.'));
+  }
+  else {
+    drupal_set_message(t('This email address is already used. Please use another email address.'), 'error');
+  }//dpm(get_defined_vars());
+}
+
+/**
+ * Implements hook_node_type_delete();
+ */
+function easysignup_node_type_delete($info) {
+  $active_nodes = variable_get('easysignup_active', array());
+  if (!empty($active_nodes)) {
+    foreach ($active_nodes as $machine => $name) {
+      if ($machine == $info->type) {
+        unset($active_nodes['machine']);
+        variable_set('easysignup_active', $active_nodes);
+      }
+    }
+  }
+  //delete nodes from the easysignup_nodes table
+  db_delete('node')->condition('type', $info->type)->execute();
+  //delete nids from pool
+  db_delete('easysignup_nodes')->condition('type', $info->type)->execute();
+//delete nids from bundles
+  $tabs = db_select('easysignup_users', 'es')
+      ->fields('es', array('bundles', 'email'))
+      ->execute()
+      ->fetchAll();
+  foreach ($tabs as $tab) {
+    $list = unserialize($tab->bundles);
+    foreach ($list as $item => $val) {
+      if ($info->type == $item) {
+        unset($list[$item]);
+        db_update('easysignup_users')
+            ->fields(array('bundles' => serialize($list)))
+            ->condition('email', $tab->email)
+            ->execute();
+      }
+    }
+  }//dpm(get_defined_vars());
+}
+
+/**
+ * add a checkbox to the node_edit_form, if checked, the current node will
+ * be aded to the mailing pool
+ */
+function easysignup_form_node_form_alter(&$form, $form_state) {
+  $item = $form['#node']->type;
+  if (_node_type_is_active($item)) {
+    $nid = isset($form['#node']->nid) ? $form['#node']->nid : 0;
+    $form['pool'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Notification'),
+      '#description' => t('add current node to the notification pool'),
+      '#default_value' => _node_status($nid),
+    );
+  }//dpm(get_defined_vars());
+}
+
+/**
+ * implements hook_node_insert().
+ * when creating a node, update the mailing pool
+ */
+function easysignup_node_insert($node) {
+  if (isset($node->pool) && $node->pool == 1 && $node->status == 1) {
+    db_insert('easysignup_nodes')
+        ->fields(array(
+          'nid' => $node->nid,
+          'type' => $node->type,
+          'in_pool' => 1
+        ))
+        ->execute();
+  }//dpm(get_defined_vars());
+}
+
+/**
+ * implements hook_node_update().
+ * when updating a node, update the mailing pool
+ */
+function easysignup_node_update($node) {
+  if (isset($node->pool)) {
+    if ($node->pool == 1 && $node->status == 1) {
+      $stored_in_pool = db_select('easysignup_nodes', 'pool')
+          ->fields('pool', array('nid'))
+          ->condition('nid', $node->nid)
+          ->execute()
+          ->fetchField();
+      //if current node isn't in the pool, store it
+      if ($stored_in_pool == FALSE) {
+        db_insert('easysignup_nodes')
+            ->fields(array(
+              'nid' => $node->nid,
+              'type' => $node->type,
+              'in_pool' => 1
+            ))
+            ->execute();
+      }
+      //if node is in pool, set it to 1
+      db_update('easysignup_nodes')
+          ->fields(array('in_pool' => 1))
+          ->condition('nid', $node->nid)
+          ->execute();
+    }
+    if ($node->pool == 0) {
+      db_delete('easysignup_nodes')->condition('nid', $node->nid)->execute();
+      db_delete('easysignup_comments')->condition('nid', $node->nid)->execute();
+    }//dpm(get_defined_vars());
+  }
+}
+
+/**
+ * implements hook_node_delete().
+ * when delating a node, update the mailing pool
+ */
+function easysignup_node_delete($node) {
+  db_delete('easysignup_nodes')->condition('nid', $node->nid)->execute();
+  db_delete('easysignup_comments')->condition('nid', $node->nid)->execute();
+}
+
+/**
+ * implements hook_mail
+ */
+function easysignup_mail($key, &$message, $params) {
+  $send_from = _send_from();
+  if ($key == 'send_mass') {
+    $message['subject'] = t('New content available under @site', array('@site' => $send_from));
+    $message['body'][] = t('Below you will find an overview of new and updated content for your subscribed areas');
+    $message['body'][] = $params['content'];
+    //$message['body'][] = ''; //extra empty line
+    $message['body'][] = $params['mail_footer'];
+  }
+  if ($key == 'confirm_subcription') {
+    $message['subject'] = t('Subscription to new content from ') . ' ' . $send_from;
+    $message['body'][] = t('Complete registration process. Please confirm your email by clicking below');
+    $message['body'][] = ''; //extra empty line
+    $message['body'][] = $params['link'];
+  }
+}
+
+/**
+ * implements hook_comment_insert
+ */
+function easysignup_comment_insert($comment) {
+  //add published comment to the sending pool
+  _synchronize_insert_comments($comment);
+}
+
+/**
+ * implements hook_comment_update
+ */
+function easysignup_comment_update($comment) {
+  //update the comment status in the sending pool
+  _synchronize_update_comments($comment);
+}
+
+/**
+ * implements hook_comment_delete
+ */
+function easysignup_comment_delete($comment) {
+  //remove deleted comment from the sending pool
+  _synchronize_delete_comments($comment);
+}

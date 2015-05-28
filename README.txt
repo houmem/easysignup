@@ -1,5 +1,4 @@
-# easysignup
-The easy signup module allows visitors to sign up for content types and comments feed and to.
+The easy signup module allows users (registered and not registered) to sign up for content types and comments feed and to.
 The admin has the ability to choose content types that will be exposed to the visitors.
 In the notification email, the are two links to unsubscribe or to update content types that the current user is signed up to.
 

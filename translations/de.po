@@ -1,0 +1,308 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  callbacks.inc: n/a
+#  easysignup.module: n/a
+#  easysignup.admin.inc: n/a
+#  easysignup.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-04-09 16:25+0200\n"
+"PO-Revision-Date: 2015-04-09 16:33+0100\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team:  <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.7.5\n"
+"Language: de\n"
+
+#: callbacks.inc:34
+msgid "Subscription Management"
+msgstr "Abonnementverwaltung"
+
+#: callbacks.inc:35
+msgid "You want to customize your subscription"
+msgstr "Möchten Sie Ihr Abonnement anpassen"
+
+#: callbacks.inc:36
+msgid "You want to unsubscribe"
+msgstr "Möchten Sie sich abmelden"
+
+#: callbacks.inc:40;150;155;176
+msgid "This link is not valid"
+msgstr "Dieser Link ist nicht gültig"
+
+#: callbacks.inc:146
+msgid ""
+"You will receive a notification email, once new content is published in your "
+"chosen categories."
+msgstr ""
+"Sie erhalten eine E-Mail-Benachrichtigung, sobald neuer Inhalte in Ihren "
+"gewählten Kategorien veröffentlicht wird."
+
+#: callbacks.inc:193 easysignup.module:147
+msgid "Your interests"
+msgstr "Ihre Interessen"
+
+#: callbacks.inc:199
+msgid "Update your subscription"
+msgstr "Aktualisieren Sie Ihr Abonnement"
+
+#: callbacks.inc:209 easysignup.admin.inc:46 easysignup.module:167
+msgid "Options"
+msgstr "Optionen"
+
+#: callbacks.inc:216 easysignup.module:178
+msgid "Comments"
+msgstr "Kommentare"
+
+#: callbacks.inc:225
+msgid "Submit"
+msgstr "Absenden"
+
+#: callbacks.inc:274
+msgid "The changes has been saved"
+msgstr "Die Änderungen wurden gespeichert"
+
+#: callbacks.inc:306
+msgid "You are successfully unsubscribed."
+msgstr "Sie haben sich erfolgreich abgemeldet."
+
+#: callbacks.inc:343
+msgid "Email"
+msgstr "E-Mail"
+
+#: callbacks.inc:344
+msgid "Content type"
+msgstr "Inhaltstyp"
+
+#: callbacks.inc:344
+msgid "Operation"
+msgstr "Aktion"
+
+#: callbacks.inc:351
+msgid "Delete"
+msgstr "löschen"
+
+#: callbacks.inc:369
+msgid "Item deleted."
+msgstr "Element wurde gelöcht."
+
+#: callbacks.inc:394
+msgid "Latest articles"
+msgstr "Letzte Artikel"
+
+#: callbacks.inc:406
+msgid "Latest comments"
+msgstr "Letzte Kommentare"
+
+#: callbacks.inc:596
+msgid "with comments"
+msgstr "mit Kommentaren"
+
+#: easysignup.admin.inc:9
+msgid "Email settings"
+msgstr "E-Mail-Einstellungen"
+
+#: easysignup.admin.inc:15
+msgid "Custom sender"
+msgstr "Benutzerdefinierter Absender"
+
+#: easysignup.admin.inc:17
+msgid ""
+"Enter a name to be used as sender in the headers when sending email with "
+"this module. Default value is the site name"
+msgstr ""
+"Geben Sie einen Namen ein, der als Absender der E-Mails zu verwenden ist, "
+"wenn Sie E-Mails mit diesem Modul senden. Standardwert ist der Name der "
+"Website."
+
+#: easysignup.admin.inc:22
+msgid "email"
+msgstr "E-Mail"
+
+#: easysignup.admin.inc:24
+msgid ""
+"Enter a valid email address to be used in the headers when sending email "
+"with this module. Default value is the site email"
+msgstr ""
+"Geben Sie eine E-Mail Adresse ein, die als Absender der E-Mails zu verwenden "
+"ist, wenn Sie E-Mails mit diesem Modul senden. Standardwert ist die E-Mail "
+"der Website."
+
+#: easysignup.admin.inc:33
+msgid "Content types"
+msgstr "Inhaltstypen"
+
+#: easysignup.admin.inc:58
+msgid "Signup for comments for this content type"
+msgstr "Abonnieren Sie Kommentare von diesem Inhaltstypen"
+
+#: easysignup.admin.inc:63
+msgid "Make this content type private (only logged in users)"
+msgstr "Diesen Inhaltstyp privat machen (nur für angemeldete Benutzern)"
+
+#: easysignup.admin.inc:71
+msgid "No content types available"
+msgstr "Keine verfügbare Inhaltstypen"
+
+#: easysignup.admin.inc:90
+msgid "The email address is not valid!"
+msgstr "Die E-Mail Adresse ist ungültig"
+
+#: easysignup.module:33
+msgid "Administer Easy signup"
+msgstr "Administer Easy signup"
+
+#: easysignup.module:34
+msgid "Administer Easy signup."
+msgstr "Administer Easy signup."
+
+#: easysignup.module:46
+msgid ""
+"The Easy signup module generates a block so that users can signup and be "
+"notified for new content"
+msgstr ""
+"Das easysignup Modul generiert einen Block, so dass die Benutzer Inhalte "
+"abonnieren können und darüber benachrichtigt werden."
+
+#: easysignup.module:120
+msgid "No content type available"
+msgstr "Keine verfügbare Inhaltstypen"
+
+#: easysignup.module:138
+msgid "Be top-informed! Receive the latest articles automatically  by email."
+msgstr ""
+"Top informiert! Erhalten Sie die neuesten Artikel automatisch per E-Mail."
+
+#: easysignup.module:142
+msgid "Your email"
+msgstr "Ihre E-Mail"
+
+#: easysignup.module:153
+msgid "Select your individual interests from the following areas."
+msgstr ""
+"Wählen Sie Ihre individuellen Interessen aus den folgenden Bereichen aus."
+
+#: easysignup.module:185
+msgid "Name"
+msgstr "Name"
+
+#: easysignup.module:194
+msgid "Go"
+msgstr "Absenden"
+
+#: easysignup.module:210
+msgid "Please enter a valid email address!"
+msgstr "Geben Sie bitte eine gültige Email-Adresse ein!"
+
+#: easysignup.module:214
+msgid "Please make a choise!"
+msgstr "Wählen Sie bitte!"
+
+#: easysignup.module:218
+msgid "No submission."
+msgstr "No submission."
+
+#: easysignup.module:253
+msgid ""
+"You will receive an email with a confirmation link. By clicking on the link, "
+"the registration process will be completed."
+msgstr ""
+"Sie erhalten eine E-Mail-Benachrichtigung, sobald neuer Inhalt in Ihren "
+"ausgewählten Kategorien online zur Verfügung steht."
+
+#: easysignup.module:256
+msgid "This email address is already used. Please use another email address."
+msgstr ""
+"Diese E-Mail Adresse ist schon verwendet. Bitte benutzen Sie eine andere E-"
+"Mail Adresse."
+
+#: easysignup.module:306
+msgid "Notification"
+msgstr "Benachrichtigung"
+
+#: easysignup.module:307
+msgid "add current node to the notification pool"
+msgstr "Diesen Node zur Benachrichtigungsliste hinzufügen"
+
+#: easysignup.module:379
+msgid "New content available under @site"
+msgstr "Neuer Inhalt verfügbar unter @site"
+
+#: easysignup.module:380
+msgid ""
+"Below you will find an overview of new and updated content for your "
+"subscribed areas"
+msgstr ""
+"Hier finden Sie einen Überblick neuer und aktualisierter Inhalte aus Ihren "
+"abonnierten Bereichen der Webseite."
+
+#: easysignup.module:386
+msgid "Subscription to new content from "
+msgstr "Abonnement für neue Inhalte aus"
+
+#: easysignup.module:387
+msgid ""
+"Complete registration process. Please confirm your email by clicking below"
+msgstr ""
+"Anmeldeprozess abschließen. Bestätigen Sie Ihre E-Mail, indem Sie "
+"nachfolgend klicken."
+
+#: easysignup.module:57
+msgid "Easy signup"
+msgstr "Easy Signup"
+
+#: easysignup.module:58
+msgid "Configure Easy signup"
+msgstr "Easysignup konfigurieren"
+
+#: easysignup.module:66
+msgid "Your registration has been successful."
+msgstr "Ihre Anmeldung war erfolgreich."
+
+#: easysignup.module:67
+msgid "your subscription is confirmed"
+msgstr "Ihr Abonnement wurde bestätigt"
+
+#: easysignup.module:73
+msgid "Easy signup manage subscription"
+msgstr "Easy Signup Abonnementverwaltung"
+
+#: easysignup.module:74
+msgid "Managing subscription"
+msgstr "Abonnementverwaltung"
+
+#: easysignup.module:80
+msgid "Easy signup unsubscribe"
+msgstr "Easy signup Abmeldung"
+
+#: easysignup.module:81
+msgid "Unsubsribe"
+msgstr "Abmelden"
+
+#: easysignup.module:87
+msgid "Subscribers list"
+msgstr "Liste der Abonnenten"
+
+#: easysignup.module:88
+msgid "List of current subcribers"
+msgstr "Liste der aktuellen Abonnenten"
+
+#: easysignup.info:0
+msgid "easysignup"
+msgstr "Easysignup"
+
+#: easysignup.info:0
+msgid "Easy signup per content type"
+msgstr "Easy signup pro Inhaltstyp"
+
+#: easysignup.info:0
+msgid "bmh"
+msgstr "bmh"

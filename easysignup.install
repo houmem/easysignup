@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * Implements hook_uninstall().
+ */
+function easysignup_uninstall() {
+    db_delete('variable')->condition('name', 'easysignup_%', 'LIKE')->execute();
+    cache_clear_all('variables', 'cache_bootstrap');
+}
+
+/**
+ * Implements hook_schema();
+ */
+function easysignup_schema() {
+    $schema = array();
+    $schema['easysignup_users'] = array(
+      'description' => 'Easy signup: Users mangement',
+      'fields' => array(
+        'sid' => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'submission id',
+        ),
+        'email' => array(
+          'description' => 'email of the submitter',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'bundles' => array(
+          'description' => 'name of the ontent types in a seialized array',
+          'type' => 'text',
+          'not null' => TRUE,
+        ),
+        'hash' => array(
+          'description' => 'a random string that identifies the submitter',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'confirmed' => array(
+          'description' => 'boolean set to 1 if the link was confirmed',
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('sid'),
+    );
+    $schema['easysignup_nodes'] = array(
+      'description' => 'Easy signup send mail pool',
+      'fields' => array(
+        'id' => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'id of the record',
+        ),
+        'nid' => array(
+          'description' => 'id of the node',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'type' => array(
+          'description' => 'the node type',
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'in_pool' => array(
+          'description' => 'boolean set to 1 if the node belongs the mailing pool',
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('id'),
+    );
+    $schema['easysignup_comments'] = array(
+      'description' => 'Easy signup comments',
+      'fields' => array(
+        'id' => array(
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'id of the record',
+        ),
+        'cid' => array(
+          'description' => 'id of the comment',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'nid' => array(
+          'description' => 'id of the node',
+          'type' => 'int',
+          'not null' => TRUE,
+          'default' => 0,
+        ),
+        'sent' => array(
+          'description' => 'boolean set to 1 if comment was sent',
+          'type' => 'int',
+          'size' => 'tiny',
+          'not null' => TRUE,
+        ),
+      ),
+      'primary key' => array('id'),
+    );
+    return $schema;
+}

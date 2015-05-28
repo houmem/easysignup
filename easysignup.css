@@ -1,0 +1,15 @@
+/*
+*hide anti spam field
+*/
+#block-easysignup-easysignup .form-item-spm {
+    display: none;
+}
+#edit-email {
+    width: 100%;
+}
+.sub-container {
+    padding-left: 10px;
+}
+.manage-subscription .sub-comment {
+    padding-left: 15px;
+}
